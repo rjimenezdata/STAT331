@@ -1,0 +1,43 @@
+---
+title: "Alcohol Consumption Data"
+author: "Adam, Dillon, Nick, Ruben"
+format: 
+  html:
+    self-contained: true
+    code-tools: true
+    toc: true
+    number-sections: true
+editor: source
+execute: 
+  error: true
+  echo: true
+  message: false
+  warning: false
+---
+
+## DATA CLEANING
+
+```{r Setup}
+library(tidyverse)
+library(here)
+alc <- read.csv(here::here("sh_alc_pcap_li.csv"))
+```
+
+```{r}
+#Data Cleaning
+alc <- alc |> 
+  rename_with(.fn = ~str_sub(.x,2), 
+                          .cols = X1999:X2017)
+alc <- alc |> 
+  mutate(
+    across("1999":"2017", as.numeric))
+alc |> head()
+```
+
+```{r}
+#Pivoting Longer
+alc_final <- alc |> 
+  pivot_longer(cols = `1999`:`2017`,
+               names_to = "year",
+               values_to = "alcohol_consumption")
+```
